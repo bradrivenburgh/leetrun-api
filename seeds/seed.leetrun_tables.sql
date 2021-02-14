@@ -13,20 +13,19 @@ VALUES
   ('leetrunner', 'Sam', 'Champion', '$2a$12$/4P5/ylaB7qur/McgrEKwuCy.3JZ6W.cRtqxiJsYCdhr89V4Z3rp.'),
   ('rivdog', 'Alex', 'Trebek', '$2a$12$Hq9pfcWWvnzZ8x8HqJotveRHLD13ceS7DDbrs18LpK6rfj4iftNw.');
 
-INSERT INTO run_entries (id, user_id, date, location, distance, hours, minutes, seconds, notes, public, weather, surface, terrain)
+INSERT INTO run_entries (id, date, location, distance, hours, minutes, seconds, notes, public, weather, surface, terrain, user_id)
 VALUES
-  ("1", 1, "2021-02-01", "Philadelphia, PA", "5", "00", "17", "00", "Great run!", TRUE, "clear", "pavement", "flat"),
-  ("2", 2, "2021-01-15", "Haddonfield, NJ", "10", "00", "40", "00", "Great run!", TRUE, "rain", "pavement", "mixed"),
-  ("3", 3, "2021-01-14", "Cinnaminson, NJ", "15", "01", "02", "00", "Exhausting!", FALSE, "snow", "pavement", "uphill"),
-  ("4", 4, "2021-01-05", "Langhorne, PA", "25", "01", "20", "00", "Run down a mountain. My quads hurt!", TRUE, "clear", "pavement", "downhill"),
-  ("5", 4, "2021-01-04", "Philadelphia, PA", "30", "02", "00", "00", "Almost at marathon distance", TRUE, "clear", "pavement", "mixed"),
-  ("6", 4, "2021-01-01", "Philadelphia, PA", "5", "00", "17", "30", "The long distance training has helped me improve my endurance considerably.", TRUE, "clear", "trail", "mixed"),
-  ("7", 1, "2021-01-01", "Philadelphia, PA", "5", "00", "17", "30", "The long distance training has helped me improve my endurance considerably.", TRUE, "clear", "trail", "mixed"),
-  ("8", 2, "2021-01-01", "Philadelphia, PA", "5", "00", "17", "30", "The long distance training has helped me improve my endurance considerably.", TRUE, "clear", "trail", "mixed"),
-  ("9", 3, "2021-01-01", "Philadelphia, PA", "5", "00", "17", "30", "The long distance training has helped me improve my endurance considerably.", TRUE, "clear", "trail", "mixed"),
-  ("10", 4, "2021-01-01", "Philadelphia, PA", "5", "00", "17", "30", "The long distance training has helped me improve my endurance considerably.", TRUE, "clear", "trail", "mixed"),
-  ("11", 5, "2021-01-01", "Philadelphia, PA", "5", "00", "17", "30", "The long distance training has helped me improve my endurance considerably.", TRUE, "clear", "trail", "mixed"),
-  ("12", 1, "2021-01-01", "Philadelphia, PA", "5", "00", "17", "30", "The long distance training has helped me improve my endurance considerably.", TRUE, "clear", "trail", "mixed");
-
+  ('1', '2021-02-01', 'Philadelphia, PA', '5', '00', '17', '00', 'Great run!', TRUE, 'clear', 'pavement', 'flat', 1),
+  ('2', '2021-01-15', 'Haddonfield, NJ', '10', '00', '40', '00', 'Great run!', TRUE, 'rain', 'pavement', 'mixed', 2),
+  ('3', '2021-01-14', 'Cinnaminson, NJ', '15', '01', '02', '00', 'Exhausting!', FALSE, 'snow', 'pavement', 'uphill', 3),
+  ('4', '2021-01-05', 'Langhorne, PA', '25', '01', '20', '00', 'Run down a mountain. My quads hurt!', TRUE, 'clear', 'pavement', 'downhill', 4),
+  ('5', '2021-01-04', 'Philadelphia, PA', '30', '02', '00', '00', 'Almost at marathon distance', TRUE, 'clear', 'pavement', 'mixed', 5),
+  ('6', '2021-01-01', 'Philadelphia, PA', '5', '00', '17', '30', 'The long distance training has helped me improve my endurance considerably.', TRUE, 'clear', 'trail', 'mixed', 4),
+  ('7', '2021-01-01', 'Philadelphia, PA', '5', '00', '17', '30', 'The long distance training has helped me improve my endurance considerably.', TRUE, 'clear', 'trail', 'mixed', 1),
+  ('8', '2021-01-01', 'Philadelphia, PA', '5', '00', '17', '30', 'The long distance training has helped me improve my endurance considerably.', TRUE, 'clear', 'trail', 'mixed', 2),
+  ('9', '2021-01-01', 'Philadelphia, PA', '5', '00', '17', '30', 'The long distance training has helped me improve my endurance considerably.', TRUE, 'clear', 'trail', 'mixed', 3),
+  ('10', '2021-01-01', 'Philadelphia, PA', '5', '00', '17', '30', 'The long distance training has helped me improve my endurance considerably.', TRUE, 'clear', 'trail', 'mixed', 4),
+  ('11', '2021-01-01', 'Philadelphia, PA', '5', '00', '17', '30', 'The long distance training has helped me improve my endurance considerably.', TRUE, 'clear', 'trail', 'mixed', 5),
+  ('12', '2021-01-01', 'Philadelphia, PA', '5', '00', '17', '30', 'The long distance training has helped me improve my endurance considerably.', TRUE, 'clear', 'trail', 'mixed', 1);
 
 COMMIT;

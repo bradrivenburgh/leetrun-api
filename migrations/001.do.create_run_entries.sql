@@ -1,5 +1,5 @@
 CREATE TABLE run_entries (
-    id TEXT NOT NULL,
+    id TEXT PRIMARY KEY NOT NULL,
     date TEXT NOT NULL,
     location TEXT NOT NULL,
     distance TEXT NOT NULL,
