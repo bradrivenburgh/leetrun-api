@@ -5,11 +5,10 @@ const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 const { NODE_ENV } = require('./config');
-
+const authRouter = require('./auth/auth-router');
+const usersRouter = require('./users/users-router');
 
 const app = express();
-
-// Create middleware logic
 
 // Define morgan options
 const morganOption = (NODE_ENV === 'production')
@@ -44,9 +43,12 @@ function errorHandler(error, req, res, next) {
 app.use(morgan(morganOption));
 app.use(cors());
 app.use(helmet());
-// app.use(express.json()); // Enable if using non-GET endpoints
+app.use(express.json());
 // app.use(validateBearerToken); // Enable after adding validation
 // Routers can go here
+app.use('/api/auth', authRouter);
+app.use('/api/users', usersRouter);
+
 app.use(errorHandler);
 
 app.get('/', (req, res) => {
