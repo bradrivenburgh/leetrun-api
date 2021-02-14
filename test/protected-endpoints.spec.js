@@ -3,18 +3,16 @@ const app = require('../src/app')
 const helpers = require('./test-helpers')
 
 describe('Protected endpoints', function() {
-  let db
+  let db;
 
   const {
     testUsers,
-    testArticles,
-    testComments,
-  } = helpers.makeArticlesFixtures()
+  } = helpers.makeFixtures();
 
   before('make knex instance', () => {
     db = knex({
       client: 'pg',
-      connection: process.env.TEST_DB_URL,
+      connection: process.env.TEST_DATABASE_URL,
     })
     app.set('db', db)
   })
@@ -25,31 +23,14 @@ describe('Protected endpoints', function() {
 
   afterEach('cleanup', () => helpers.cleanTables(db))
 
-  beforeEach('insert articles', () =>
+  beforeEach('insert data', () =>
     helpers.seedArticlesTables(
       db,
       testUsers,
-      testArticles,
-      testComments,
     )
   )
 
   const protectedEndpoints = [
-    {
-      name: 'GET /api/articles/:article_id',
-      path: '/api/articles/1',
-      method: supertest(app).get,
-    },
-    {
-      name: 'GET /api/articles/:article_id/comments',
-      path: '/api/articles/1/comments',
-      method: supertest(app).get,
-    },
-    {
-      name: 'POST /api/comments',
-      path: '/api/comments',
-      method: supertest(app).post,
-    },
     {
       name: 'POST /api/auth/refresh',
       path: '/api/auth/refresh',
