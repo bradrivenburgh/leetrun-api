@@ -1,19 +1,19 @@
 CREATE TYPE weather_category AS ENUM (
   'clear',
   'rain',
-  'snow',
+  'snow'
 );
 
 CREATE TYPE surface_category AS ENUM (
   'pavement',
-  'trail',
+  'trail'
 );
 
 CREATE TYPE terrain_category AS ENUM (
   'mixed',
   'flat',
   'uphill',
-  'downhill',
+  'downhill'
 );
 
 ALTER TABLE run_entries
