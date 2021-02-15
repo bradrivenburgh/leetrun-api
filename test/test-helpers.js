@@ -49,7 +49,7 @@ function makeRunEntriesArray(users) {
       minutes: "17",
       seconds: "00",
       notes: "Great run!",
-      public: TRUE,
+      public: true,
       weather: "clear",
       surface: "pavement",
       terrain: "flat",
@@ -64,7 +64,7 @@ function makeRunEntriesArray(users) {
       minutes: "17",
       seconds: "00",
       notes: "Great run!",
-      public: TRUE,
+      public: true,
       weather: "clear",
       surface: "pavement",
       terrain: "flat",
@@ -79,7 +79,7 @@ function makeRunEntriesArray(users) {
       minutes: "17",
       seconds: "00",
       notes: "Great run!",
-      public: TRUE,
+      public: true,
       weather: "clear",
       surface: "pavement",
       terrain: "flat",
@@ -94,7 +94,7 @@ function makeRunEntriesArray(users) {
       minutes: "17",
       seconds: "00",
       notes: "Great run!",
-      public: TRUE,
+      public: true,
       weather: "clear",
       surface: "pavement",
       terrain: "flat",
@@ -133,7 +133,7 @@ function makeMaliciousRunEntry(user) {
     minutes: "17",
     seconds: "00",
     notes: 'Naughty naughty very naughty <script>alert("xss");</script>',
-    public: TRUE,
+    public: true,
     weather: "clear",
     surface: "pavement",
     terrain: "flat",
@@ -153,7 +153,7 @@ function makeMaliciousRunEntry(user) {
 
 function makeFixtures() {
   const testUsers = makeUsersArray();
-  const testEntries = makeRunEntriesArray();
+  const testEntries = makeRunEntriesArray(testUsers);
   return { testUsers, testEntries };
 }
 
