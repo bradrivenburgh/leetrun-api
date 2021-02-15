@@ -193,35 +193,22 @@ function seedUsers(db, users) {
     );
 }
 
-// function seedArticlesTables(db, users, articles, comments=[]) {
-//   // use a transaction to group the queries and auto rollback on any failure
-//   return db.transaction(async trx => {
-//     await seedUsers(trx, users)
-//     await trx.into('blogful_articles').insert(articles)
-//     // update the auto sequence to match the forced id values
-//     await trx.raw(
-//       `SELECT setval('blogful_articles_id_seq', ?)`,
-//       [articles[articles.length - 1].id],
-//     )
-//     // only insert comments if there are some, also update the sequence counter
-//     if (comments.length) {
-//       await trx.into('blogful_comments').insert(comments)
-//       await trx.raw(
-//         `SELECT setval('blogful_comments_id_seq', ?)`,
-//         [comments[comments.length - 1].id],
-//       )
-//     }
-//   })
-// }
+function seedRunEntriesTable(db, users, entries) {
+  // use a transaction to group the queries and auto rollback on any failure
+  return db.transaction(async trx => {
+    await seedUsers(trx, users);
+    await trx.into('run_entries').insert(entries);
+  });
+}
 
-// function seedMaliciousArticle(db, user, article) {
-//   return seedUsers(db, [user])
-//     .then(() =>
-//       db
-//         .into('blogful_articles')
-//         .insert([article])
-//     )
-// }
+function seedMaliciousRunEntry(db, user, entry) {
+  return seedUsers(db, [user])
+    .then(() =>
+      db
+        .into('run_entries')
+        .insert([entry])
+    );
+}
 
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
   const token = jwt.sign({ user_id: user.id }, secret, {
@@ -233,9 +220,15 @@ function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
 
 module.exports = {
   makeUsersArray,
+  makeRunEntriesArray,
+  makeExpectedRunEntry,
+  makeMaliciousRunEntry,
+
 
   makeFixtures,
   cleanTables,
+  seedRunEntriesTable,
+  seedMaliciousRunEntry,
   makeAuthHeader,
   seedUsers,
 };
