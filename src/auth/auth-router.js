@@ -6,6 +6,7 @@ const authRouter = express.Router()
 
 authRouter
   .post('/login', (req, res, next) => {
+    console.log(req.body.user_name, req.body.password)
     const { user_name, password } = req.body
     const loginUser = { user_name, password }
 
