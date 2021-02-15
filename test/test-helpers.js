@@ -193,13 +193,21 @@ function seedUsers(db, users) {
     );
 }
 
-function seedRunEntriesTable(db, users, entries) {
+function seedRunEntriesTable(db, entries) {
   // use a transaction to group the queries and auto rollback on any failure
   return db.transaction(async trx => {
-    await seedUsers(trx, users);
     await trx.into('run_entries').insert(entries);
   });
 }
+
+
+// function seedRunEntriesTable(db, users, entries) {
+//   // use a transaction to group the queries and auto rollback on any failure
+//   return db.transaction(async trx => {
+//     await seedUsers(trx, users);
+//     await trx.into('run_entries').insert(entries);
+//   });
+// }
 
 function seedMaliciousRunEntry(db, user, entry) {
   return seedUsers(db, [user])
