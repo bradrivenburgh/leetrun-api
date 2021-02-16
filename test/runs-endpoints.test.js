@@ -159,7 +159,34 @@ describe("Run Entries Endpoints", () => {
             }
           })
       })
-    })
+    });
+
+    context("Given an XSS attack entry", () => {
+      const testUser = helpers.makeUsersArray()[0];
+      const {
+        maliciousRunEntry,
+        expectedRunEntry,
+      } = helpers.makeMaliciousRunEntry(testUser);
+
+      it("removes XSS attack content", () => {
+        return supertest(app)
+          .post("/api/runs")
+          .set("Authorization", helpers.makeAuthHeader(testUsers[0]))
+          .send(maliciousRunEntry)
+          .expect(201)
+          .then((response) => {
+            return supertest(app)
+              .get(`/api/runs/${maliciousRunEntry.id}`)
+              .set("Authorization", helpers.makeAuthHeader(testUser))
+              .expect(200)
+              .then(fetchedEntry => {
+                expect(fetchedEntry.body.location).to.eql(expectedRunEntry.location);
+                expect(fetchedEntry.body.notes).to.eql(expectedRunEntry.notes);
+              });
+          });
+      });
+    });
+
 
   });
 });
