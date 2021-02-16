@@ -37,7 +37,6 @@ describe("Run Entries Endpoints", () => {
       beforeEach(() => {
         helpers.seedRunEntriesTable(db, testEntries);
       });
-      
 
       it("it responds with 200 and list user of entries", () => {
         const expectedRunEntries = testEntries.filter((entry) => {
@@ -51,9 +50,12 @@ describe("Run Entries Endpoints", () => {
           .set("Authorization", helpers.makeAuthHeader(testUsers[0]))
           .expect(200)
           .then((response) => {
-            // Coerce user_id to Number; supertest is sending it as a string
-            // even though it is coming from an Integer type column in the db
+            // Coerce user_id / public to Number/Boolean; knex is converting it to 
+            // a string even though it is coming from Integer/Boolean type columns 
+            // in the db
             response.body[0].user_id = Number(response.body[0].user_id);
+            response.body[0].public = Boolean(response.body[0].public);
+
             expect(response.body).to.deep.equal(expectedRunEntries);
           });
       });
@@ -81,5 +83,29 @@ describe("Run Entries Endpoints", () => {
           });
       });
     });
+  });
+
+  describe("POST /api/runs", () => {
+    beforeEach("insert users", () => helpers.seedUsers(db, testUsers));
+    beforeEach("insert run entries", () =>
+      helpers.seedRunEntriesTable(db, testEntries)
+    );
+
+    it('creates a new run entry, responding with 201 and new entry', () => {
+      const newEntry = testEntries[0];
+      const testUser = testUsers[0];
+      newEntry.id = JSON.stringify(new Date());
+
+      return supertest(app)
+        .post('/api/runs')
+        .set("Authorization", helpers.makeAuthHeader(testUser))
+        .send(newEntry)
+        .expect(201)
+        .then(returnedEntry => {
+          expect(returnedEntry.body[0]).to.eql(newEntry);            
+        })
+    })
+
+    
   });
 });

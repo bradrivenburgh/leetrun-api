@@ -21,7 +21,7 @@ const RunService = {
     return db
       .insert(newRun)
       .into('run_entries')
-      .returning('*');
+      .returning('*')
   },
 
   deleteRun(id, db) {
