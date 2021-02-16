@@ -9,12 +9,35 @@ const RunService = {
       .orderBy('date', 'desc');
   },
 
-  getById(db, id) {
+  getById(id, db) {
     return db
       .select('*')
       .from('run_entries')
-      .where('id', id)
+      .where({ id })
       .first();
+  },
+
+  insertRun(newRun, db) {
+    return db
+      .insert(newRun)
+      .into('run_entries')
+      .returning('*');
+  },
+
+  deleteRun(id, db) {
+    return db
+      .select('*')
+      .from('run_entries')
+      .where({ id })
+      .delete();
+  },
+
+  updateRun(newRunData, id, db) {
+    return db
+      .select('*')
+      .from('run_entries')
+      .where({ id })
+      .update(newRunData);
   },
 
   serializeRuns(runEntries) {
