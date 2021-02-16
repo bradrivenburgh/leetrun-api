@@ -102,10 +102,18 @@ describe("Run Entries Endpoints", () => {
         .send(newEntry)
         .expect(201)
         .then(returnedEntry => {
-          expect(returnedEntry.body[0]).to.eql(newEntry);            
+          return supertest(app)
+            .get(`/api/runs/${newEntry.id}`)
+            .set("Authorization", helpers.makeAuthHeader(testUser))
+            .expect(200)
+            .then(fetchedEntry => {
+              fetchedEntry.body.user_id = Number(fetchedEntry.body.user_id);
+              fetchedEntry.body.public = Boolean(fetchedEntry.body.public);
+              expect(fetchedEntry.body).to.eql(newEntry);
+            })
         })
     })
 
-    
+
   });
 });

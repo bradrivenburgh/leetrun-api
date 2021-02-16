@@ -56,8 +56,30 @@ runRouter.route("/").post(requireAuth, (req, res, next) => {
     .catch(next);
 });
 
-// runRouter
-//   .route('/:run_id')
-//   .all(requireAuth)
+runRouter
+  .route('/:run_id')
+  .all(requireAuth)
+  .all((req, res, next) => {
+    const entryId = req.params.run_id;
+    RunService.getById(entryId, req.app.get("db"))
+      .then(entry => {
+        if (!entry) {
+          return res.status(404).json({
+            error: { message: 'Run entry does not exist' }
+          })
+        }
+        res.entry = entry;
+        next();
+      })
+      .catch(next);
+  });
+
+runRouter
+  .route('/:run_id')
+  .get((req, res, next) => {
+    res.json(RunService.serializeRuns(res.entry));
+  })
+
+
 
 module.exports = runRouter;
