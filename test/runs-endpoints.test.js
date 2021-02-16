@@ -187,6 +187,46 @@ describe("Run Entries Endpoints", () => {
       });
     });
 
+  });
+
+  describe.only('DELETE /api/runs/:run_id', () => {
+    beforeEach("insert users", () => helpers.seedUsers(db, testUsers));
+    const testUser = testUsers[0];
+
+    context('given no run entries in the database', () => {
+      it('responds with 404', () => {
+        const runId = "123456";
+        return supertest(app)
+          .delete(`/api/runs/${runId}`)
+          .set("Authorization", helpers.makeAuthHeader(testUser))
+          .expect(404, { error: `Run entry does not exist` })
+      });
+    })
+
+    context('given the are run entries in the database', () => {
+      const userTestEntries = testEntries.filter(entry => entry.user_id === testUser.id);
+      beforeEach(() => {
+        helpers.seedRunEntriesTable(db, userTestEntries);
+      });
+
+      it('responds with 204 and removes the run entry', () => {
+        const idToRemove = "1";
+        const expectedRunEntries = userTestEntries
+          .filter(run => run.id !== idToRemove);
+        return supertest(app)
+          .delete(`/api/runs/${idToRemove}`)
+          .set("Authorization", helpers.makeAuthHeader(testUser))
+          .expect(204)
+          .then(res => {
+            return supertest(app)
+              .get('/api/runs')
+              .set("Authorization", helpers.makeAuthHeader(testUser))
+              .expect([])
+          });
+      });
+    });
 
   });
+
+
 });

@@ -60,7 +60,6 @@ runRouter.post("/", requireAuth, (req, res, next) => {
     return res.status(400).json(validationErrorObj);
   }
 
-
   // Add user id into entry
   newEntry.user_id = req.user.id;
   // Sanitize
@@ -98,5 +97,18 @@ runRouter
 runRouter.get("/:run_id", (req, res, next) => {
   res.json(RunService.serializeRuns(res.entry));
 });
+
+runRouter
+.delete("/:run_id", (req, res, next) => {
+    const runId = req.params.run_id;
+    RunService.deleteRun(runId, req.app.get("db"))
+      .then(() => {
+        res
+          .status(204)
+          .end()
+      })
+      .catch(next);
+});
+
 
 module.exports = runRouter;
