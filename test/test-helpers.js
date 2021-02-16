@@ -49,7 +49,7 @@ function makeRunEntriesArray(users) {
       minutes: "17",
       seconds: "00",
       notes: "Great run!",
-      public: true,
+      public: "true",
       weather: "clear",
       surface: "pavement",
       terrain: "flat",
@@ -64,7 +64,7 @@ function makeRunEntriesArray(users) {
       minutes: "17",
       seconds: "00",
       notes: "Great run!",
-      public: true,
+      public: "true",
       weather: "clear",
       surface: "pavement",
       terrain: "flat",
@@ -79,7 +79,7 @@ function makeRunEntriesArray(users) {
       minutes: "17",
       seconds: "00",
       notes: "Great run!",
-      public: true,
+      public: "true",
       weather: "clear",
       surface: "pavement",
       terrain: "flat",
@@ -94,7 +94,7 @@ function makeRunEntriesArray(users) {
       minutes: "17",
       seconds: "00",
       notes: "Great run!",
-      public: true,
+      public: "true",
       weather: "clear",
       surface: "pavement",
       terrain: "flat",
@@ -105,22 +105,21 @@ function makeRunEntriesArray(users) {
 
 function makeExpectedRunEntry(users, entry) {
   const user = users.find((user) => user.id === entry.user_id);
-
-  return {
-    id: entry.id,
-    date: entry.date,
-    location: entry.location,
-    distance: entry.distance,
-    hours: entry.hours,
-    minutes: entry.minutes,
-    seconds: entry.seconds,
-    notes: entry.notes,
-    public: entry.public,
-    weather: entry.weather,
-    surface: entry.surface,
-    terrain: entry.terrain,
-    user_id: user.id,
-  };
+    return {
+      id: entry.id,
+      date: entry.date,
+      location: entry.location,
+      distance: entry.distance,
+      hours: entry.hours,
+      minutes: entry.minutes,
+      seconds: entry.seconds,
+      notes: entry.notes,
+      public: entry.public,
+      weather: entry.weather,
+      surface: entry.surface,
+      terrain: entry.terrain,
+      user_id: user.id,
+    };  
 }
 
 function makeMaliciousRunEntry(user) {
@@ -200,22 +199,10 @@ function seedRunEntriesTable(db, entries) {
   });
 }
 
-
-// function seedRunEntriesTable(db, users, entries) {
-//   // use a transaction to group the queries and auto rollback on any failure
-//   return db.transaction(async trx => {
-//     await seedUsers(trx, users);
-//     await trx.into('run_entries').insert(entries);
-//   });
-// }
-
-function seedMaliciousRunEntry(db, user, entry) {
-  return seedUsers(db, [user])
-    .then(() =>
-      db
-        .into('run_entries')
-        .insert([entry])
-    );
+function seedMaliciousRunEntry(db, entry) {
+  return db
+    .into('run_entries')
+    .insert([entry])
 }
 
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
