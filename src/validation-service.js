@@ -65,10 +65,8 @@ const ValidationService = {
       reportArr.push(defaultMissingPropsMessage(missingProps));
     }
 
-    return { error: { message: reportArr.join('; ') }};
+    return { error: reportArr.join('; ') };
   },
 }
 
-module.exports = {
-  ValidationService
-};
+module.exports = ValidationService;

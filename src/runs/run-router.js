@@ -1,11 +1,13 @@
 const express = require("express");
-const path = require('path');
+const path = require("path");
+const ValidationService = require('../validation-service');
+const { requiredDictionary } = require('../caller-validation');
 const RunService = require("./run-service");
 const { requireAuth } = require("../middleware/jwt-auth");
 
 const runRouter = express.Router();
 
-runRouter.route("/").get(requireAuth, (req, res, next) => {
+runRouter.get("/", requireAuth, (req, res, next) => {
   RunService.getUserRuns(req.user.id, req.app.get("db"))
     .then((runEntries) => {
       res.json(runEntries.map(RunService.serializeRuns));
@@ -13,7 +15,7 @@ runRouter.route("/").get(requireAuth, (req, res, next) => {
     .catch(next);
 });
 
-runRouter.route("/").post(requireAuth, (req, res, next) => {
+runRouter.post("/", requireAuth, (req, res, next) => {
   // Get properties for run from request body
   let newEntry = ({
     id,
@@ -29,16 +31,35 @@ runRouter.route("/").post(requireAuth, (req, res, next) => {
     surface,
     terrain,
   } = req.body);
-  const required = { id, date, location, distance, hours, minutes, seconds };
+
+  const required = [
+    "id",
+    "date",
+    "location",
+    "distance",
+    "hours",
+    "minutes",
+    "seconds",
+  ];
 
   // Validate the data
-  for (const [key, value] of Object.entries(newEntry)) {
-    if (required[key] && value == null) {
-      return res.status(400).json({
-        error: `Missing '${key}' in request body`,
-      });
-    }
+
+  const missingAndInvalidProps = ValidationService.validateProperties(
+    newEntry, 
+    requiredDictionary
+  );
+  
+  if (
+    missingAndInvalidProps.invalidProps.length ||
+    missingAndInvalidProps.missingProps.length
+  ) {
+    const validationErrorObj = ValidationService.createValidationErrorObject(
+      missingAndInvalidProps
+    );
+    // logger.error(validationErrorObj.error.message);
+    return res.status(400).json(validationErrorObj);
   }
+
 
   // Add user id into entry
   newEntry.user_id = req.user.id;
@@ -57,16 +78,16 @@ runRouter.route("/").post(requireAuth, (req, res, next) => {
 });
 
 runRouter
-  .route('/:run_id')
+  .route("/:run_id")
   .all(requireAuth)
   .all((req, res, next) => {
     const entryId = req.params.run_id;
     RunService.getById(entryId, req.app.get("db"))
-      .then(entry => {
+      .then((entry) => {
         if (!entry) {
           return res.status(404).json({
-            error: { message: 'Run entry does not exist' }
-          })
+            error: "Run entry does not exist",
+          });
         }
         res.entry = entry;
         next();
@@ -74,12 +95,8 @@ runRouter
       .catch(next);
   });
 
-runRouter
-  .route('/:run_id')
-  .get((req, res, next) => {
-    res.json(RunService.serializeRuns(res.entry));
-  })
-
-
+runRouter.get("/:run_id", (req, res, next) => {
+  res.json(RunService.serializeRuns(res.entry));
+});
 
 module.exports = runRouter;

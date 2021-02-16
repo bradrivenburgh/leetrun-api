@@ -53,7 +53,7 @@ app.use('/api/runs', runRouter);
 app.use(errorHandler);
 
 app.get('/', (req, res) => {
-  res.send('Hello, boilerplate!');
+  res.send('Welcome to the LeetRun API');
 });
 
 module.exports = app;

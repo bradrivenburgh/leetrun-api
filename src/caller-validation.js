@@ -3,18 +3,38 @@
     // Define invalid values for caller's required properties;
     // pass this to ValidationService
     const requiredDictionary = {
-      title: (value) => {
+      id: (value) => {
         if (!value) { 
           return false;
         }
       },
-      url: (value) => {
+      date: (value) => {
         if (!value) {
           return false;
         }
       },
-      rating: (value) => {
-        if (typeof value !== 'number' || value < 0 || value > 5) {
+      location: (value) => {
+        if (!value) {
+          return false;
+        }
+      },
+      distance: (value) => {
+        if (!value) {
+          return false;
+        }
+      },
+      hours: (value) => {
+        if (!value) {
+          return false;
+        }
+      },
+      minutes: (value) => {
+        if (!value) {
+          return false;
+        }
+      },
+      seconds: (value) => {
+        if (!value) {
           return false;
         }
       },

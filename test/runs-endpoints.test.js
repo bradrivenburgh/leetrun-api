@@ -87,14 +87,11 @@ describe("Run Entries Endpoints", () => {
 
   describe("POST /api/runs", () => {
     beforeEach("insert users", () => helpers.seedUsers(db, testUsers));
-    beforeEach("insert run entries", () =>
-      helpers.seedRunEntriesTable(db, testEntries)
-    );
 
     it('creates a new run entry, responding with 201 and new entry', () => {
       const newEntry = testEntries[0];
       const testUser = testUsers[0];
-      newEntry.id = JSON.stringify(new Date());
+      newEntry.id = JSON.stringify(new Date() + Math.floor(Math.random() * 1000));
 
       return supertest(app)
         .post('/api/runs')
@@ -114,6 +111,55 @@ describe("Run Entries Endpoints", () => {
         })
     })
 
+    it('creates a new run entry, checking required fields', () => {
+      const newEntry = testEntries[0];
+      const testUser = testUsers[0];
+      newEntry.id = JSON.stringify(new Date() + Math.floor(Math.random() * 1000));
+
+      return supertest(app)
+        .post('/api/runs')
+        .set("Authorization", helpers.makeAuthHeader(testUser))
+        .send(newEntry)
+        .expect(201)
+        .then(returnedEntry => {
+          return supertest(app)
+            .get(`/api/runs/${newEntry.id}`)
+            .set("Authorization", helpers.makeAuthHeader(testUser))
+            .expect(200)
+            .then(fetchedEntry => {
+              fetchedEntry.body.user_id = Number(fetchedEntry.body.user_id);
+              fetchedEntry.body.public = Boolean(fetchedEntry.body.public);
+              expect(fetchedEntry.body).to.eql(newEntry);
+            })
+        })
+    })
+
+    const requiredFields = [ "id", "date", "location", "distance", "hours", "minutes", "seconds" ];
+
+    const allInvalidFields = [];
+    requiredFields.forEach((field) => {
+      it(`responds with 400 and an error message when the '${field}' is missing`, () => {
+        const testEntry = testEntries[1];
+        const testUser = testUsers[0];
+        // Delete required field
+        delete testEntry[field]
+
+        return supertest(app)
+          .post('/api/runs')
+          .set('Authorization', helpers.makeAuthHeader(testUser))
+          .send(testEntry)
+          .expect(400)
+          .then(response => {
+            if (response.status === 400) {
+              allInvalidFields.push(field);
+              console.log(response.text)
+              expect(response.text).to.equal(
+                  `{"error":"Required properties are missing: ${allInvalidFields.join(', ')}"}`
+              );
+            }
+          })
+      })
+    })
 
   });
 });
