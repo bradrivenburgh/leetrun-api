@@ -8,6 +8,15 @@ const RunService = {
       .where('user_id', userId)
       .orderBy('date', 'desc');
   },
+
+  getById(db, id) {
+    return db
+      .select('*')
+      .from('run_entries')
+      .where('id', id)
+      .first();
+  },
+
   serializeRuns(runEntries) {
     const entry = runEntries;
     return {

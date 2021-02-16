@@ -14,5 +14,9 @@ runRouter
       .catch(next);
   })
 
+runRouter
+  .route('/:run_id')
+  .all(requireAuth)
+  
 
 module.exports = runRouter;
