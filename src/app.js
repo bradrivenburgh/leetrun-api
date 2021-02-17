@@ -45,8 +45,6 @@ app.use(morgan(morganOption));
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
-// app.use(validateBearerToken); // Enable after adding validation
-// Routers can go here
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/runs', runRouter);

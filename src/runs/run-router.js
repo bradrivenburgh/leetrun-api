@@ -50,8 +50,6 @@ runRouter.post("/", requireAuth, (req, res, next) => {
 
   // Add user id into entry
   newEntry.user_id = req.user.id;
-  // Sanitize
-  newEntry = RunService.serializeRuns(newEntry);
 
   // Insert into db with RunService
   RunService.insertRun(newEntry, req.app.get("db"))
@@ -59,7 +57,7 @@ runRouter.post("/", requireAuth, (req, res, next) => {
       return res
         .status(201)
         .location(path.posix.join(req.originalUrl, `${entry.id}`))
-        .json(entry);
+        .json(RunService.serializeRuns(entry));
     })
     .catch(next);
 });
