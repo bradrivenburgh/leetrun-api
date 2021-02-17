@@ -13,7 +13,7 @@ const RunService = {
     return db
       .select('*')
       .from('run_entries')
-      .where({ id })
+      .where('id', id)
       .first();
   },
 
