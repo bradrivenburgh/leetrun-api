@@ -152,7 +152,6 @@ describe("Run Entries Endpoints", () => {
           .then(response => {
             if (response.status === 400) {
               allInvalidFields.push(field);
-              console.log(response.text)
               expect(response.text).to.equal(
                   `{"error":"Required properties are missing: ${allInvalidFields.join(', ')}"}`
               );
@@ -189,10 +188,22 @@ describe("Run Entries Endpoints", () => {
 
   });
 
-  describe.only('DELETE /api/runs/:run_id', () => {
+  describe('DELETE /api/runs/:run_id', () => {
+    before("disconnect from db", () => db.destroy());
+    const { testUsers, testEntries } = helpers.makeFixtures();
+    before("make knex instance", () => {
+      db = knex({
+        client: "pg",
+        connection: process.env.TEST_DATABASE_URL,
+      });
+      app.set("db", db);
+    });
+    before("cleanup", () => helpers.cleanTables(db));
+    afterEach("cleanup", () => helpers.cleanTables(db));
+
     beforeEach("insert users", () => helpers.seedUsers(db, testUsers));
     const testUser = testUsers[0];
-
+    
     context('given no run entries in the database', () => {
       it('responds with 404', () => {
         const runId = "123456";
@@ -204,29 +215,23 @@ describe("Run Entries Endpoints", () => {
     })
 
     context('given the are run entries in the database', () => {
-      const userTestEntries = testEntries.filter(entry => entry.user_id === testUser.id);
       beforeEach(() => {
-        helpers.seedRunEntriesTable(db, userTestEntries);
+        helpers.seedRunEntriesTable(db, [testEntries[0]]);
       });
-
+      
       it('responds with 204 and removes the run entry', () => {
         const idToRemove = "1";
-        const expectedRunEntries = userTestEntries
-          .filter(run => run.id !== idToRemove);
         return supertest(app)
           .delete(`/api/runs/${idToRemove}`)
           .set("Authorization", helpers.makeAuthHeader(testUser))
           .expect(204)
           .then(res => {
             return supertest(app)
-              .get('/api/runs')
+              .get(`/api/runs/${idToRemove}`)
               .set("Authorization", helpers.makeAuthHeader(testUser))
-              .expect([])
+              .expect(404)
           });
       });
     });
-
   });
-
-
 });

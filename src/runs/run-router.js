@@ -10,7 +10,7 @@ const runRouter = express.Router();
 runRouter.get("/", requireAuth, (req, res, next) => {
   RunService.getUserRuns(req.user.id, req.app.get("db"))
     .then((runEntries) => {
-      res.json(runEntries.map(RunService.serializeRuns));
+      return res.json(runEntries.map(RunService.serializeRuns));
     })
     .catch(next);
 });
@@ -68,7 +68,7 @@ runRouter.post("/", requireAuth, (req, res, next) => {
   // Insert into db with RunService
   RunService.insertRun(newEntry, req.app.get("db"))
     .then((entry) => {
-      res
+      return res
         .status(201)
         .location(path.posix.join(req.originalUrl, `${entry.id}`))
         .json(entry);
@@ -103,7 +103,7 @@ runRouter
     const runId = req.params.run_id;
     RunService.deleteRun(runId, req.app.get("db"))
       .then(() => {
-        res
+        return res
           .status(204)
           .end()
       })
