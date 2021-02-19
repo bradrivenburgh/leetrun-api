@@ -4,7 +4,7 @@ const { logger } = require('../logger');
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
-const { NODE_ENV } = require('./config');
+const { NODE_ENV, CLIENT_ORIGIN } = require('./config');
 const { validateBearerToken } = require('./middleware/client-auth');
 const authRouter = require('./auth/auth-router');
 const usersRouter = require('./users/users-router');
@@ -30,7 +30,7 @@ function errorHandler(error, req, res, next) {
 }
 
 app.use(morgan(morganOption));
-app.use(cors());
+app.use(cors({CLIENT_ORIGIN}));
 app.use(helmet());
 app.use(express.json());
 app.use('/api/auth', authRouter);
